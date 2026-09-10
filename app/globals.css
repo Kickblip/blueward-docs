@@ -2,6 +2,20 @@
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
 
+@theme {
+  --color-fd-primary: #2563eb;
+  --color-fd-primary-foreground: #ffffff;
+  --color-fd-accent: #dbeafe;
+  --color-fd-accent-foreground: #1e40af;
+}
+
+.dark {
+  --color-fd-primary: #60a5fa;
+  --color-fd-primary-foreground: #0f172a;
+  --color-fd-accent: #172554;
+  --color-fd-accent-foreground: #bfdbfe;
+}
+
 html {
   scrollbar-gutter: stable;
 }

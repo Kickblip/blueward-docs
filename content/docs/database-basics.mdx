@@ -1,0 +1,76 @@
+---
+title: Database Basics
+description: A simple introduction to Drizzle Kit and editing data with Drizzle Studio.
+icon: Database
+---
+
+A database stores information in tables. Each **row** is a record, such as
+a user, and each **column** is a field, such as their name or email address.
+The **schema** defines those tables, columns, and their rules.
+
+Drizzle provides two tools you'll use when working with a database:
+
+- **Drizzle Kit** manages schema changes from the terminal.
+- **Drizzle Studio** lets you browse and edit database records in your browser.
+
+These examples assume the application already has Drizzle installed and a
+`drizzle.config.ts` file configured for your development database. Run the
+commands from that application's project root.
+
+## Opening Drizzle Studio
+
+Start Studio with:
+
+```bash
+npx drizzle-kit studio
+```
+
+Open the link printed in your terminal, usually
+`https://local.drizzle.studio`. Keep the terminal running while you use Studio.
+Press `Ctrl+C` when you're finished.
+
+Studio connects to the database specified in `drizzle.config.ts`. Check that
+this points to your development database before making changes.
+
+## Browsing and editing data
+
+Select a table to see its records. You can filter and sort the results to
+find the record you need.
+
+For example, to update a user's display name:
+
+1. Open the table containing users.
+2. Find the correct user using their ID or email.
+3. Edit the display name cell.
+4. Review and save the change.
+
+You can also add rows or delete existing ones. New rows must satisfy the
+table's rules, such as required fields and unique email addresses.
+
+Saved edits change the connected database. They don't update your source
+files or create migrations, and they bypass the application's own form
+validation.
+
+## Changing the database structure
+
+Adding a column or creating a table is a schema change. In a project that
+keeps its schema in code, start by editing the Drizzle schema file.
+
+Drizzle Kit provides these commands:
+
+| Command                    | What it does                                                            |
+| -------------------------- | ----------------------------------------------------------------------- |
+| `npx drizzle-kit generate` | Creates SQL migration files from changes to your Drizzle schema.        |
+| `npx drizzle-kit migrate`  | Applies pending migration files to the database.                        |
+| `npx drizzle-kit push`     | Updates the database structure directly without saving migration files. |
+
+A **migration** is a saved set of database changes that can be applied
+consistently across environments.
+
+For a migration workflow, edit the schema, run `generate`, review the
+generated SQL, then run `migrate`. Generating a migration alone doesn't
+change the database.
+
+`push` is useful for quick development experiments. Follow the project's
+chosen workflow, and review any proposed table or column deletions before
+applying them.

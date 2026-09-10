@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "---Introduction---",
+    "index",
+    "prettier",
+    "---Databases---",
+    "database-basics",
+    "database-schema",
+    "---Reference---",
+    "static",
+    "..."
+  ]
+}

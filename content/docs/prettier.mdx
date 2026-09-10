@@ -1,0 +1,99 @@
+---
+title: Prettier in VS Code
+description: Set up automatic formatting and keep your code consistent.
+icon: Sparkles
+---
+
+Prettier automatically formats your code, handling indentation, spacing,
+quotes, and line breaks. Using the same formatting rules makes changes
+easier to read and review.
+
+The VS Code extension runs Prettier directly in your editor.
+
+## Installing the extension
+
+1. Open the **Extensions** panel in VS Code.
+2. Search for **Prettier - Code formatter**.
+3. Install the extension with the ID `esbenp.prettier-vscode`.
+
+This project also includes Prettier and its Tailwind plugin as dependencies.
+Install the project's dependencies from the terminal:
+
+```bash
+npm install
+```
+
+The extension uses the project's installed version of Prettier.
+
+## Formatting on save
+
+Add these settings to `.vscode/settings.json` in the project root.
+If the file already exists, merge these entries into its existing object.
+
+```json title=".vscode/settings.json"
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
+}
+```
+
+Prettier will now format supported files when you save them.
+
+To format manually, open the Command Palette with `Cmd+Shift+P` on macOS
+or `Ctrl+Shift+P` on Windows/Linux, then run **Format Document**.
+
+## What formatting looks like
+
+Before formatting:
+
+```ts
+const user={name:'Alex',email:'alex@example.com'};
+```
+
+After formatting with this project's settings:
+
+```ts
+const user = { name: "Alex", email: "alex@example.com" }
+```
+
+Prettier adjusts the presentation of the code. It doesn't check whether
+your application works correctly.
+
+## Project formatting rules
+
+The `.prettierrc` file stores the shared formatting rules. This project
+uses two-space indentation, prefers double quotes, omits optional
+semicolons, and targets a line width of 80 characters.
+
+These rules take priority over the extension's personal formatting
+preferences. VS Code settings still control when formatting runs and
+which formatter is selected.
+
+Keeping the rules in the repository helps everyone produce consistent
+formatting.
+
+## Tailwind class sorting
+
+The project also uses `prettier-plugin-tailwindcss`. Whenever Prettier
+formats your code, this plugin sorts Tailwind classes into a consistent
+order.
+
+It handles `className` attributes and, with this project's configuration,
+class strings inside `cn()` and `cva()` calls.
+
+The plugin is loaded by Prettier, so you don't need another VS Code
+extension for class sorting.
+
+## If formatting isn't working
+
+Open **View → Output** and select **Prettier** to see error details.
+
+Check that:
+
+- Prettier is selected as the formatter for the current file's language.
+- The project's dependencies are installed.
+- The file has no syntax errors preventing formatting.
+- Any `tailwindStylesheet` path in `.prettierrc` points to an existing file.
+
+For example, `app/global.css` and `app/globals.css` are different paths.
+A mismatch can prevent the Tailwind plugin from formatting the file.

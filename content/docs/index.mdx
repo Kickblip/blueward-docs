@@ -1,13 +1,104 @@
 ---
-title: Hello World
-description: Your first document
+title: Getting Started
+description: Setting up your dev environment to contribute to Blueward
+icon: Rocket
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+import { DatabaseIcon, CpuIcon } from "lucide-react"
 
-## What is Next?
+## Installing Node.js
+
+### Windows
+
+Go to the official Node.js download page:
+https://nodejs.org/en/download
+
+Download the LTS Windows installer and run it. When it completes, open a **new** PowerShell or Command Prompt and verify the install:
+
+```bash
+node -v
+npm -v
+```
+
+### MacOS / Linux
+
+For MacOS and Linux, you can use NVM to manage Node versions. You can also download individual version installers from the same link as the Windows section.
+
+Install NVM by following the steps on the project repo: https://github.com/nvm-sh/nvm#installing-and-updating
+
+When the install script completes, restart your terminal and run:
+
+```bash
+nvm install --lts
+```
+
+Finally, verify the installation:
+
+```bash
+node -v
+npm -v
+```
+
+## Cloning Blueward
+
+Navigate to a directory where you keep your projects and run:
+
+```bash
+git clone https://github.com/Kickblip/blueward
+cd blueward
+```
+
+Install the packages that Blueward uses:
+
+```bash
+npm install
+```
+
+Create a new branch for your edits and replace `feature/my-new-feature` with whatever you want to name it:
+
+```bash
+git switch -c feature/my-new-feature
+```
+
+## Environment variables
+
+<Callout title="Environment Variables" type="warn">
+  API Keys and other environment variables are extremely sensitive. Never share
+  them with others in insecure ways.
+</Callout>
+
+If you are interested in contributing to Blueward first make sure you can sign in to UT [Austin Stache](https://stache.utexas.edu/).
+
+Then reach out to **@kickball** on discord and join the [Longhorn LoL server](https://discord.com/invite/s7W7Rg7AcW). Make sure to include your name and EID in your request.
+
+### Setting your environment variables
+
+After receiving the environment variables you will need to copy them into your local project.
+
+Locate the `.env.example` file in your project directory and rename it to `.env`. Then, populate the corresponding values with the key names.
+
+<Callout title="Prettier" type="warn">
+  Before continuing, make sure to [set up and use the Prettier
+  plugin](/prettier).
+</Callout>
+
+## Running the server
+
+Finally, run `npm run dev` in your terminal to start the development server and then open https://localhost:3000 in a new browser tab.
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
+  <Card
+    icon={<DatabaseIcon />}
+    title="Learn more about databases"
+    href="/docs/headless"
+  >
+    fsdfsdf
+  </Card>
+  <Card
+    icon={<CpuIcon />}
+    title="Learn more about client server separation"
+    href="/docs/headless"
+  >
+    fsdfsdf
+  </Card>
 </Cards>

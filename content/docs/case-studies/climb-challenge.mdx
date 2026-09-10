@@ -1,0 +1,125 @@
+---
+title: Climb Challenge
+description: A simple introduction to Drizzle Kit and editing data with Drizzle Studio.
+icon: Database
+---
+
+On August 31st, 2026 we launched the first "Fall Climb Challenge" for Longhorn LoL. In this guide we will examine the technology behind the climb challenge in order to better understand client/server separation and data fetching in Next.js.
+
+When a player visits the page, we have to display the current state of the leaderboard to them. For this, we will create a `getClimbLeaderboard()` function that we can call to pull the necessary data from the database.
+Looking at our page, you'll notice that each player/entry in the leaderboard needs to have:
+
+- A display name
+- Their # of points in the challenge
+- Their win and loss record
+- If they are on a winstreak
+- A profile picture
+- A Background banner (for the podium players)
+
+But these properties are stored in two separate database tables, so we need to create a join statement to query them.
+
+<div className="my-4 grid gap-4 md:grid-cols-2 [&>figure]:min-w-0 [&>figure]:my-0">
+```js title="Player Table"
+export const players = pgTable("players", {
+  id: integer().primaryKey(),
+  authId: varchar({ length: 128 }),
+  bannerId: integer(),
+  banners: integer("banners")
+  lastDailyClaimDate: date(),
+  experience: integer(),
+  puuid: varchar({ length: 128 }),
+  riotIdGameName: varchar({ length: 32 }),
+  riotIdTagline: varchar({ length: 8 }),
+  // ...
+})
+```
+```js title="Climb Challenge Table"
+export const climbChallengePlayers = pgTable("climb_challenge_players", {
+  playerId: integer().references(players.id),
+  puuid: varchar({ length: 128 }),
+  startingWins: integer(),
+  startingLosses: integer(),
+  wins: integer(),
+  losses: integer(),
+  netWins: integer(),
+  hotStreak: boolean(),
+  points: integer(),
+  inactive: boolean(),
+  // ...
+})
+```
+</div>
+
+Then, we can query this data from the server side before the page loads on the client.
+
+```js
+const rows = await db
+  .select({
+    playerId: climbChallengePlayers.playerId,
+    authId: players.authId,
+    puuid: climbChallengePlayers.puuid,
+    riotIdGameName: players.riotIdGameName,
+    riotIdTagline: players.riotIdTagline,
+    bannerId: players.bannerId,
+    netWins: climbChallengePlayers.netWins,
+    wins: climbChallengePlayers.wins,
+    losses: climbChallengePlayers.losses,
+    hotStreak: climbChallengePlayers.hotStreak,
+    points: climbChallengePlayers.points,
+    inactive: climbChallengePlayers.inactive,
+  })
+  .from(climbChallengePlayers)
+  .innerJoin(players, eq(climbChallengePlayers.playerId, players.id))
+  .orderBy(desc(climbChallengePlayers.points), asc(players.riotIdGameName))
+/* 
+    Why do we use desc() and asc() in the same orderBy() call?
+        We sort players by highest points first, then alphabetically by
+        name when their points are tied.
+**/
+
+return rows
+```
+
+And so `getClimbLeaderboard()` will simply wrap this database query. However, currently every time a user visits the page, a query will be made to our database. This is unnecessary because we know the standings only change once per hour. Thus, we should only query the database when we need to get a fresh standing, and then just serve the same response to every request within the next hour.
+
+### Caching Database Responses
+
+We will reduce unnecessary database calls with a process called caching. In Next.js this is simple. We will wrap the query in an unstable cache:
+
+```js
+export const getClimbLeaderboard = unstable_cache(
+  async () => {
+    await db
+      .select({
+        playerId: climbChallengePlayers.playerId,
+        authId: players.authId,
+        // ...
+      })
+      .from(climbChallengePlayers)
+      .innerJoin(players, eq(climbChallengePlayers.playerId, players.id))
+      .orderBy(desc(climbChallengePlayers.points), asc(players.riotIdGameName))
+  },
+  ["climb-challenge-leaderboard"],
+  {
+    tags: ["climb-challenge-leaderboard"],
+  }
+)
+```
+
+<Callout title="Next.js Update" type="info">
+  As of Next.js 16, Cache Components are set to replace `unstable_cache` but
+  Blueward uses `unstable_cache` so that is all this guide covers. You can read
+  more about Cache Components here:
+  https://nextjs.org/docs/app/getting-started/caching
+</Callout>
+
+Now this function will always return the same leaderboard standings until we force it to refresh data by calling `updateTag("climb-challenge-leaderboard")` somewhere else in our code.
+
+pulling the profile pictures
+puuid stored on clerk metadata
+
+join challenge server action
+
+client side timer counting down
+
+Cron job updates
