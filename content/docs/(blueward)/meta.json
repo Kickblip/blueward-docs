@@ -1,0 +1,17 @@
+{
+  "title": "Blueward",
+  "description": "The main platform",
+  "icon": "Shapes",
+  "root": true,
+  "pages": [
+    "---Introduction---",
+    "index",
+    "prettier",
+    "---Databases---",
+    "database-basics",
+    "database-schema",
+    "---Reference---",
+    "static",
+    "..."
+  ]
+}

@@ -16,6 +16,22 @@
   --color-fd-accent-foreground: #bfdbfe;
 }
 
+/* Draft — light mode */
+html:has([data-product="draft"]) {
+  --color-fd-primary: #7c3aed;
+  --color-fd-primary-foreground: #ffffff;
+  --color-fd-accent: #ede9fe;
+  --color-fd-accent-foreground: #5b21b6;
+}
+
+/* Draft — dark mode */
+html.dark:has([data-product="draft"]) {
+  --color-fd-primary: #a78bfa;
+  --color-fd-primary-foreground: #1e1033;
+  --color-fd-accent: #2e1065;
+  --color-fd-accent-foreground: #ddd6fe;
+}
+
 html {
   scrollbar-gutter: stable;
 }
